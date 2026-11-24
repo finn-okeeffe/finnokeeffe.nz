@@ -42,6 +42,7 @@ Source for **https://www.finnokeeffe.nz**: a static site built with [Hugo](https
 | Button | `{{< button url="https://…" text="Label" align="center" >}}` |
 | Link preview | `{{< bookmark url="…" title="…" description="…" icon="icon.svg" publisher="GitHub" author="…" thumbnail="thumb.png" >}}` (images are local files) |
 | Raw HTML | `{{< rawhtml >}} … {{< /rawhtml >}}` (or plain HTML on its own lines) |
+| Doctor's Kitchen dashboard | `{{< doctors-kitchen-dashboard id="…" heading="…" >}}` (both optional), see below |
 
 New external resources (scripts, iframes from other sites, images from hosts other than Unsplash) are blocked by the Content-Security-Policy in `static/_headers` until you add them there.
 
@@ -50,6 +51,14 @@ New external resources (scripts, iframes from other sites, images from hosts oth
 - `content/pages/about.md` and `content/pages/other-work.md`. They're linked in the header via `[[menus.main]]` in `hugo.toml`; the footer links (GitHub, LinkedIn) are `[[menus.footer]]`.
 - **Hero banner**: `hero: true` plus a `feature_image` shows the image as a short full-width banner behind the title, like the home page. `hero_position: "center 60%"` picks which part of the image shows (CSS `object-position`). Landscape images work best. Styles: `assets/css/site.css`.
 - **"My other work"**: each section is a `work-section` shortcode with a Markdown list inside. To add an entry, add a list line `- [Title](https://…) (Attribution, Year)`. To add a section, copy a block. Section photos are hotlinked from Unsplash and must keep their credit (the `photographer` and `unsplash_user` parameters).
+
+## The Doctor's Kitchen dashboard
+
+`/the-doctors-kitchen-dashboard/`, also embedded in the recipe post. It was a Streamlit app backed by PostgreSQL on the home server until November 2026; the data never changes (the recipes were scraped in August 2023), so it's now static:
+
+- `assets/data/the-doctors-kitchen.json`: all 108 recipes (title, link, diet, meals, times, ingredient and equipment lines), exported once from the project's database. The format is described in its `about` field.
+- `assets/js/doctors-kitchen-core.js`: the filtering, top-8 counts, histogram binning (Vega's "nice" bins, as Altair used) and ingredient search, reproducing the original SQL. `assets/js/doctors-kitchen.js` draws the controls, SVG charts and results. No libraries; the script only loads on pages using the shortcode.
+- `npm test` (`scripts/test-doctors-kitchen.mjs`) checks the logic against results recorded from the original SQL queries. CI runs it.
 
 ## Site settings
 
@@ -63,6 +72,7 @@ Needs Hugo extended **0.169.0** and Node 22.
 npm ci            # installs Pagefind
 npm run dev       # live preview; search doesn't work here (no index)
 npm run build     # full build into public/, with the search index
+npm test          # dashboard logic tests
 node scripts/check-links.mjs public   # broken internal links/images/anchors
 ```
 
@@ -87,7 +97,7 @@ Every post and page keeps its URL (`/<slug>/`), and images keep `/content/images
 | `/author/finn/` | `/` |
 | `/sitemap-*.xml` | `/sitemap.xml` |
 | `/content/images/size/w600/...` (Ghost's resized copies) | The full image |
-| `/streamlit/the-doctors-kitchen-dashboard/...` | `https://kitchen.finnokeeffe.nz/streamlit/the-doctors-kitchen-dashboard/...`; the dashboard still runs on the home server |
+| `/streamlit/the-doctors-kitchen-dashboard/...` | `/the-doctors-kitchen-dashboard/` (the old Streamlit app, now a static page) |
 | `/ghost/...` | 404: there's no admin any more |
 
 ## Migration notes (November 2026)

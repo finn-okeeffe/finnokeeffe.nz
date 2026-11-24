@@ -165,6 +165,253 @@
     margin-top: clamp(4.8rem, 4rem + 2.5vw, 8rem);
 }
 
+/* The Doctor's Kitchen dashboard ({{< doctors-kitchen-dashboard >}})
+/* ---------------------------------------------------------- */
+
+.dk {
+    --dk-pill: rgba(255, 255, 255, 0.08);
+    font-size: 1.6rem;
+    line-height: 1.5;
+}
+
+/* Solo makes direct children of the content with an id bold (meant for headings);
+   the embedded dashboard has id="embedded-dashboard". */
+.gh-content > .dk {
+    font-weight: 400;
+}
+
+.dk .dk-title {
+    margin-bottom: 0.4em;
+}
+
+.dk-intro {
+    color: var(--color-secondary-text);
+}
+
+.dk-app > * + * {
+    margin-top: 16px;
+}
+
+.dk-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px 32px;
+    margin-top: 20px;
+}
+
+.dk-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+    padding: 0;
+    margin: 0;
+    border: 0;
+}
+
+.dk-tags legend {
+    float: left;
+    margin-right: 4px;
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--color-secondary-text);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.dk-chip {
+    display: inline-flex;
+    gap: 6px;
+    align-items: center;
+    padding: 3px 12px 3px 8px;
+    font-size: 1.4rem;
+    cursor: pointer;
+    user-select: none;
+    background-color: var(--dk-pill);
+    border: 1px solid var(--color-border);
+    border-radius: 999px;
+}
+
+.dk-chip:has(input:checked) {
+    border-color: var(--ghost-accent-color);
+}
+
+.dk-chip input {
+    margin: 0;
+    accent-color: var(--ghost-accent-color);
+}
+
+.dk-chip:has(input:focus-visible) {
+    outline: 2px solid var(--ghost-accent-color);
+    outline-offset: 2px;
+}
+
+.dk-count {
+    color: var(--color-secondary-text);
+}
+
+.dk-count strong {
+    color: var(--color-darker-gray);
+}
+
+.dk-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 20px;
+    border-bottom: 1px solid var(--color-border);
+}
+
+.dk-tabs [role="tab"] {
+    padding: 8px 0;
+    margin-bottom: -1px;
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--color-secondary-text);
+    cursor: pointer;
+    background: none;
+    border: 0;
+    border-bottom: 2px solid transparent;
+}
+
+.dk-tabs [role="tab"][aria-selected="true"] {
+    color: var(--color-darker-gray);
+    border-bottom-color: var(--ghost-accent-color);
+}
+
+.dk-tabs [role="tab"]:focus-visible {
+    outline: 2px solid var(--ghost-accent-color);
+    outline-offset: 2px;
+}
+
+.dk-panel-time:not([hidden]) {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 24px;
+}
+
+.dk-chart {
+    flex: 1 1 260px;
+    margin: 0;
+}
+
+.dk-chart figcaption {
+    margin-bottom: 8px;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--color-darker-gray);
+    text-align: left;
+}
+
+.dk-plot svg {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    overflow: visible;
+}
+
+.dk-plot .dk-label,
+.dk-plot .dk-value {
+    font-size: 13px;
+    fill: var(--color-darker-gray);
+}
+
+.dk-plot .dk-tick,
+.dk-plot .dk-axis {
+    font-size: 11px;
+    fill: var(--color-secondary-text);
+}
+
+.dk-plot .dk-grid {
+    stroke: var(--color-border);
+    stroke-width: 1;
+}
+
+.dk-empty,
+.dk-note {
+    font-size: 1.4rem;
+    color: var(--color-secondary-text);
+}
+
+.dk .dk-search-title {
+    margin-top: 40px;
+    font-size: 2rem;
+}
+
+.dk-search-label {
+    display: block;
+    font-size: 1.4rem;
+    color: var(--color-secondary-text);
+}
+
+.dk-search {
+    width: 100%;
+    max-width: 480px;
+    height: 44px;
+    padding: 0 14px;
+    margin-top: 6px;
+    font-size: 1.6rem;
+    color: var(--color-darker-gray);
+    background-color: var(--dk-pill);
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+}
+
+.dk-search:focus {
+    outline: 2px solid var(--ghost-accent-color);
+    outline-offset: 1px;
+}
+
+.dk-results-count {
+    color: var(--color-secondary-text);
+}
+
+.dk-results {
+    padding-left: 2em;
+}
+
+.dk-results li + li {
+    margin-top: 6px;
+}
+
+.dk-diet {
+    display: inline-block;
+    padding: 0 8px;
+    margin-left: 4px;
+    font-size: 1.2rem;
+    font-weight: 600;
+    vertical-align: 1px;
+    border: 1px solid currentColor;
+    border-radius: 999px;
+}
+
+.dk-diet-vegan { color: #b8bb26; }
+.dk-diet-vegetarian { color: #fe8019; }
+.dk-diet-pescatarian { color: #83a598; }
+
+.dk-pager {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.dk-pager button {
+    min-width: 34px;
+    height: 34px;
+    padding: 0 8px;
+    font-size: 1.4rem;
+    color: var(--color-darker-gray);
+    cursor: pointer;
+    background-color: var(--dk-pill);
+    border: 1px solid var(--color-border);
+    border-radius: 6px;
+}
+
+.dk-pager button[aria-current="page"] {
+    color: #282828;
+    background-color: var(--ghost-accent-color);
+    border-color: var(--ghost-accent-color);
+}
+
 /* Search dialog (Pagefind)
 /* ---------------------------------------------------------- */
 

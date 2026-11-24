@@ -5,7 +5,8 @@
   "license": "SEE LICENSE IN LICENSE",
   "scripts": {
     "build": "hugo --gc --minify && pagefind --site public",
-    "dev": "hugo server --buildDrafts"
+    "dev": "hugo server --buildDrafts",
+    "test": "node scripts/test-doctors-kitchen.mjs"
   },
   "devDependencies": {
     "pagefind": "1.6.0"

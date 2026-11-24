@@ -1,5 +1,9 @@
 {{- $main := resources.Get "js/main.js" | minify | fingerprint "sha384" }}
 <script src="{{ $main.RelPermalink }}" integrity="{{ $main.Data.Integrity }}" defer></script>
+{{- if .Store.Get "hasDKDashboard" }}
+{{- $dk := slice (resources.Get "js/doctors-kitchen-core.js") (resources.Get "js/doctors-kitchen.js") | resources.Concat "js/doctors-kitchen-bundle.js" | minify | fingerprint "sha384" }}
+<script src="{{ $dk.RelPermalink }}" integrity="{{ $dk.Data.Integrity }}" defer></script>
+{{- end }}
 {{- if .Store.Get "hasMermaid" }}
 {{- $init := resources.Get "js/mermaid-init.js" | minify | fingerprint "sha384" }}
 <script src="/vendor/mermaid-12.3.0/mermaid.min.js" defer></script>

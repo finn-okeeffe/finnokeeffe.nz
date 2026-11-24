@@ -1,0 +1,57 @@
+{{- /* The Doctor's Kitchen dashboard (was a Streamlit app). Static: the data is
+       assets/data/the-doctors-kitchen.json and the charts and search run in the browser
+       (assets/js/doctors-kitchen*.js).
+       {{< doctors-kitchen-dashboard id="embedded-dashboard" heading="The Doctors Kitchen Dashboard" >}}
+       Both parameters are optional. */ -}}
+{{- $data := resources.Get "data/the-doctors-kitchen.json" | fingerprint "sha256" -}}
+{{- $recipes := ($data.Content | transform.Unmarshal).recipes -}}
+{{- .Page.Store.Set "hasDKDashboard" true -}}
+{{- $p := printf "dk%d" .Ordinal -}}
+<div class="dk"{{ with .Get "id" }} id="{{ . }}"{{ end }} data-src="{{ $data.RelPermalink }}">
+    {{- with .Get "heading" }}
+    <h2 class="dk-title">{{ . }}</h2>
+    {{- end }}
+    <p class="dk-intro">An analysis of {{ len $recipes }} recipes from <a href="https://thedoctorskitchen.com/">The Doctor's Kitchen</a>, scraped in August 2023.</p>
+
+    <div class="dk-app" data-pagefind-ignore>
+        <div class="dk-filters">
+            <fieldset class="dk-tags">
+                <legend>Meals</legend>
+                {{- range slice "Dinner" "Lunch" "Breakfast" "Snack" "Unspecified Meals" }}
+                <label class="dk-chip"><input type="checkbox" value="{{ . }}" checked> {{ . }}</label>
+                {{- end }}
+            </fieldset>
+            <fieldset class="dk-tags">
+                <legend>Diets</legend>
+                {{- range slice "Vegan" "Vegetarian" "Pescatarian" "No diet" }}
+                <label class="dk-chip"><input type="checkbox" value="{{ . }}" checked> {{ . }}</label>
+                {{- end }}
+            </fieldset>
+        </div>
+        <p class="dk-count" aria-live="polite"><strong>{{ len $recipes }}</strong> recipes selected</p>
+
+        <div class="dk-tabs" role="tablist" aria-label="Charts">
+            <button type="button" role="tab" id="{{ $p }}-tab-ingredients" aria-controls="{{ $p }}-panel-ingredients" aria-selected="true">Ingredients</button>
+            <button type="button" role="tab" id="{{ $p }}-tab-equipment" aria-controls="{{ $p }}-panel-equipment" aria-selected="false" tabindex="-1">Equipment</button>
+            <button type="button" role="tab" id="{{ $p }}-tab-time" aria-controls="{{ $p }}-panel-time" aria-selected="false" tabindex="-1">Preparation and cooking time</button>
+        </div>
+        <div class="dk-panel" role="tabpanel" id="{{ $p }}-panel-ingredients" aria-labelledby="{{ $p }}-tab-ingredients">
+            <figure class="dk-chart"><figcaption>What are the most used ingredients?</figcaption><div class="dk-plot" data-chart="ingredients"></div></figure>
+        </div>
+        <div class="dk-panel" role="tabpanel" id="{{ $p }}-panel-equipment" aria-labelledby="{{ $p }}-tab-equipment" hidden>
+            <figure class="dk-chart"><figcaption>What are the most used equipment?</figcaption><div class="dk-plot" data-chart="equipment"></div></figure>
+        </div>
+        <div class="dk-panel dk-panel-time" role="tabpanel" id="{{ $p }}-panel-time" aria-labelledby="{{ $p }}-tab-time" hidden>
+            <figure class="dk-chart"><figcaption>Distribution of preparation time</figcaption><div class="dk-plot" data-chart="prep"></div></figure>
+            <figure class="dk-chart"><figcaption>Distribution of cooking time</figcaption><div class="dk-plot" data-chart="cook"></div><p class="dk-note" data-note="cook"></p></figure>
+        </div>
+
+        <h3 class="dk-search-title">Search for recipes by ingredients</h3>
+        <label class="dk-search-label" for="{{ $p }}-search">Enter ingredients separated by commas</label>
+        <input class="dk-search" id="{{ $p }}-search" type="search" placeholder="e.g. olive oil, coriander, bean" maxlength="200" autocomplete="off" spellcheck="false">
+        <p class="dk-results-count" aria-live="polite"></p>
+        <ol class="dk-results"></ol>
+        <nav class="dk-pager" aria-label="Search result pages"></nav>
+        <noscript><p class="dk-note">The charts and the search need JavaScript.</p></noscript>
+    </div>
+</div>

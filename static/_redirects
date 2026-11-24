@@ -22,7 +22,7 @@
 /content/images/thumbnail/the_doctors_kitchen_project      /content/images/thumbnail/the_doctors_kitchen_project.png      301
 /content/images/thumbnail/instrumental-variables-notebook  /content/images/thumbnail/instrumental-variables-notebook.png  301
 
-# The Streamlit dashboard moved to its own subdomain (still served from watson via NPM).
-/streamlit/the-doctors-kitchen-dashboard    https://kitchen.finnokeeffe.nz/streamlit/the-doctors-kitchen-dashboard/         301
-/streamlit/the-doctors-kitchen-dashboard/*  https://kitchen.finnokeeffe.nz/streamlit/the-doctors-kitchen-dashboard/:splat  301
+# The Streamlit dashboard is now a static page on this site.
+/streamlit/the-doctors-kitchen-dashboard    /the-doctors-kitchen-dashboard/  301
+/streamlit/the-doctors-kitchen-dashboard/*  /the-doctors-kitchen-dashboard/  301
 

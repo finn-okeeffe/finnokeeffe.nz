@@ -16,13 +16,9 @@ The website I scraped was [The Doctor's Kitchen](https://www.thedoctorskitchen.c
 
 I briefly tried to refresh the database behind the dashboard, and rerun my scraper. The classical techniques of web scraping (e.g., using tools like [Beautiful Soup](https://www.crummy.com/software/BeautifulSoup/)) are pretty fragile, so the scraper had completely broken because of website changes. But nowadays after you view a few recipes on their website, the rest of them get locked behind requiring a log in. That's fair enough, given the masses of bots on the internet nowadays. This was only mean to be a simple refresh for my new site, so I ended up just migrating the database from its old host on neon.tech to my self-hosted server. The only other change I've made is putting the Streamlit dashboard into a Docker image to make self-hosting easier.
 
-Anyways, here's the dashboard. It also has a dedicated page on this site [here](https://kitchen.finnokeeffe.nz/streamlit/the-doctors-kitchen-dashboard/).
+Anyways, here's the dashboard. It also has a dedicated page on this site [here](/the-doctors-kitchen-dashboard/).
 
-{{< rawhtml >}}
-<div id="embedded-dashboard" style="min-height: 1000px; height: 80vh;">
-  <iframe src="https://kitchen.finnokeeffe.nz/streamlit/the-doctors-kitchen-dashboard/" title="The Doctors Kitchen Dashboard: interactive recipe analysis" style="height: 100%; width: 100%; border: 0;"></iframe>
-</div>
-{{< /rawhtml >}}
+{{< doctors-kitchen-dashboard id="embedded-dashboard" heading="The Doctors Kitchen Dashboard" >}}
 
 {{< bookmark
   url="https://github.com/finn-okeeffe/the_doctors_kitchen_project"
