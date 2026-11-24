@@ -1,0 +1,12 @@
+{{- $caption := .Params.feature_image_caption -}}
+<figure class="gh-article-image{{ if $caption }} has-caption{{ end }}"
+    {{- with .Params.hero_position }} style="--hero-position: {{ . | safeCSS }}"{{ end }}>
+    {{ partial "img.html" (dict
+        "src" .Params.feature_image "page" . "alt" (or .Params.feature_image_alt .Title)
+        "widths" (slice 300 720 960 1200 2000) "default" 1200
+        "sizes" (cond (.Params.hero | default false) "100vw" "(max-width: 1200px) 100vw, 1200px")
+        "eager" true) }}
+    {{- with $caption }}
+    <figcaption>{{ . | $.RenderString }}</figcaption>
+    {{- end }}
+</figure>

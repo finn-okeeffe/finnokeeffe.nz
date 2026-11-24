@@ -1,0 +1,41 @@
+{{- /* RSS feed at /rss/, shaped like Ghost's. The guid stays the Ghost post id for
+       migrated posts so feed readers don't show them as new. */ -}}
+{{- $base := strings.TrimSuffix "/" site.BaseURL -}}
+{{- $posts := first 15 (where site.RegularPages "Section" "posts") -}}
+{{- printf "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" | safeHTML }}
+<rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:media="http://search.yahoo.com/mrss/">
+<channel>
+<title>{{ site.Title | transform.XMLEscape | safeHTML }}</title>
+<description>{{ site.Params.description | transform.XMLEscape | safeHTML }}</description>
+<link>{{ site.Home.Permalink }}</link>
+{{- with resources.Get site.Params.icon }}
+<image><url>{{ (.Fill "256x256").Permalink }}</url><title>{{ site.Title | transform.XMLEscape | safeHTML }}</title><link>{{ site.Home.Permalink }}</link></image>
+{{- end }}
+<generator>Hugo</generator>
+{{- with $posts }}
+<lastBuildDate>{{ (index . 0).Lastmod.UTC.Format "Mon, 02 Jan 2006 15:04:05 GMT" }}</lastBuildDate>
+{{- end }}
+<atom:link href="{{ site.Home.Permalink }}rss/" rel="self" type="application/rss+xml"/>
+<ttl>60</ttl>
+{{- range $posts }}
+{{- $content := .Content | replaceRE `\s(srcset|sizes)="[^"]*"` "" | replaceRE `(src|href)="/` (printf `$1="%s/` $base) }}
+<item>
+<title>{{ .Title | transform.XMLEscape | safeHTML }}</title>
+<description>{{ .Description | transform.XMLEscape | safeHTML }}</description>
+<link>{{ .Permalink }}</link>
+{{- with .Params.ghost_id }}
+<guid isPermaLink="false">{{ . }}</guid>
+{{- else }}
+<guid isPermaLink="true">{{ .Permalink }}</guid>
+{{- end }}
+<dc:creator>{{ site.Params.author.name }}</dc:creator>
+<pubDate>{{ .Date.UTC.Format "Mon, 02 Jan 2006 15:04:05 GMT" }}</pubDate>
+{{- $img := partial "social-image.html" . }}
+{{- if .Params.feature_image }}{{ with $img.url }}
+<media:content url="{{ . }}" medium="image"/>
+{{- end }}{{ end }}
+<content:encoded>{{ printf "<![CDATA[%s]]>" ($content | replaceRE `]]>` "]]]]><![CDATA[>") | safeHTML }}</content:encoded>
+</item>
+{{- end }}
+</channel>
+</rss>

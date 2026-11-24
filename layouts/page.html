@@ -1,0 +1,21 @@
+{{ define "main" }}
+<main class="gh-main gh-outer">
+    <div class="gh-inner">
+        <article class="gh-article page{{ if not .Params.feature_image }} no-image{{ end }}">
+            <header class="gh-article-header gh-canvas">
+                <h1 class="gh-article-title">{{ .Title }}</h1>
+                {{- with .Params.excerpt }}
+                <p class="gh-article-excerpt">{{ . }}</p>
+                {{- end }}
+                {{- if .Params.feature_image }}
+                {{ partial "feature-image.html" . }}
+                {{- end }}
+            </header>
+
+            <section class="gh-content gh-canvas" data-pagefind-body>
+                {{ .Content }}
+            </section>
+        </article>
+    </div>
+</main>
+{{ end }}

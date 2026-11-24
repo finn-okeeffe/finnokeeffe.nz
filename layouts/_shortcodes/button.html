@@ -1,0 +1,2 @@
+{{- /* Ghost button card. {{< button url="https://…" text="Label" align="center" >}} (align: left or center) */ -}}
+<div class="kg-card kg-button-card kg-align-{{ .Get "align" | default "left" }}"><a href="{{ .Get "url" }}" class="kg-btn kg-btn-accent">{{ .Get "text" }}</a></div>

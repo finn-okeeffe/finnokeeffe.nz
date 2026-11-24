@@ -1,0 +1,10 @@
+{{- /* Ghost callout card.
+       {{< callout emoji="💡" color="grey" >}}Markdown text{{< /callout >}}
+       color: grey, white, blue, green, yellow, red, pink, purple, accent */ -}}
+{{- $text := .Inner | strings.TrimSpace | .Page.RenderString (dict "display" "block") -}}
+{{- /* Ghost puts the text straight in the div, with <br><br> between paragraphs. */ -}}
+{{- $text = $text | replaceRE `</p>\s*<p>` "<br><br>" | replaceRE `^\s*<p>` "" | replaceRE `</p>\s*$` "" -}}
+<div class="kg-card kg-callout-card kg-callout-card-{{ .Get "color" | default "grey" }}">
+{{- with .Get "emoji" }}<div class="kg-callout-emoji">{{ . }}</div>{{ end -}}
+<div class="kg-callout-text">{{ $text | safeHTML }}</div>
+</div>

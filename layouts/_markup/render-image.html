@@ -1,0 +1,18 @@
+{{- /* Markdown images. An image on its own line becomes a Ghost-style image card:
+         ![alt text](file.png "Optional caption, *Markdown* allowed")
+       Add {.kg-width-wide} or {.kg-width-full} on the next line for a wider card. */ -}}
+{{- $class := .Attributes.class | default "" -}}
+{{- $sizes := "(min-width: 720px) 720px" -}}
+{{- if in $class "kg-width-wide" }}{{ $sizes = "(min-width: 1200px) 1200px" }}{{ end -}}
+{{- if in $class "kg-width-full" }}{{ $sizes = "100vw" }}{{ end -}}
+{{- $img := partial "img.html" (dict
+    "src" .Destination "page" .PageInner "alt" .PlainText "class" "kg-image"
+    "widths" (slice 600 1000 1600 2400) "default" 0 "sizes" $sizes) -}}
+{{- if .IsBlock -}}
+<figure class="kg-card kg-image-card{{ with $class }} {{ . }}{{ end }}{{ if .Title }} kg-card-hascaption{{ end }}">
+{{- $img -}}
+{{- with .Title }}<figcaption>{{ . | $.PageInner.RenderString }}</figcaption>{{ end -}}
+</figure>
+{{- else -}}
+{{- $img -}}
+{{- end -}}

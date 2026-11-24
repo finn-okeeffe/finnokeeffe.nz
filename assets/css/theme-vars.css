@@ -1,0 +1,6 @@
+/* Theme settings from hugo.toml [params] (were Ghost design settings). */
+:root {
+    --background-color: {{ site.Params.backgroundColor }};
+    --ghost-accent-color: {{ site.Params.accentColor }};
+    --gh-font-heading: {{ site.Params.headingFont }};
+}

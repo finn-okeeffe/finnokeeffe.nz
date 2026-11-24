@@ -1,1 +1,15 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><title>Not found</title></head><body><h1>404</h1></body></html>
+{{ define "main" }}
+<main class="gh-main gh-outer">
+    <div class="gh-inner">
+        <article class="gh-article page no-image">
+            <header class="gh-article-header gh-canvas">
+                <h1 class="gh-article-title">404</h1>
+                <p class="gh-article-excerpt">Page not found</p>
+            </header>
+            <section class="gh-content gh-canvas">
+                <p><a href="{{ site.Home.RelPermalink }}">Go to the front page →</a></p>
+            </section>
+        </article>
+    </div>
+</main>
+{{ end }}

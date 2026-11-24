@@ -1,0 +1,51 @@
+{{- $title := cond .IsHome site.Title .Title -}}
+{{- if eq .Kind "404" }}{{ $title = "404 — Page not found" }}{{ end -}}
+{{- $desc := or .Description site.Params.description -}}
+{{- $isPost := and .IsPage (eq .Section "posts") -}}
+{{- $image := partial "social-image.html" . -}}
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{{ $title }}</title>
+    {{- $css := partialCached "css.html" . }}
+    <link rel="stylesheet" href="{{ $css.RelPermalink }}" integrity="{{ $css.Data.Integrity }}">
+    {{- if .IsHome }}{{ with resources.Get site.Params.cover }}
+    <link rel="preload" as="image" href="{{ .RelPermalink }}">
+    {{- end }}{{ end }}
+    {{- if .Store.Get "hasMath" }}
+    <link rel="stylesheet" href="/vendor/katex-0.18.4/katex.min.css">
+    {{- end }}
+
+    <meta name="description" content="{{ $desc }}">
+    {{- with resources.Get site.Params.icon }}
+    <link rel="icon" href="{{ (.Fill "256x256").RelPermalink }}" type="image/png">
+    <link rel="apple-touch-icon" href="{{ (.Fill "180x180").RelPermalink }}">
+    {{- end }}
+    {{- if ne .Kind "404" }}
+    <link rel="canonical" href="{{ .Permalink }}">
+    {{- end }}
+    <link rel="alternate" type="application/rss+xml" title="{{ site.Title }}" href="{{ "rss/" | absURL }}">
+
+    <meta property="og:site_name" content="{{ site.Title }}">
+    <meta property="og:type" content="{{ cond $isPost "article" "website" }}">
+    <meta property="og:title" content="{{ $title }}">
+    <meta property="og:description" content="{{ $desc }}">
+    <meta property="og:url" content="{{ .Permalink }}">
+    {{- with $image }}
+    <meta property="og:image" content="{{ .url }}">
+    {{- with .width }}
+    <meta property="og:image:width" content="{{ . }}">
+    <meta property="og:image:height" content="{{ $image.height }}">
+    {{- end }}
+    {{- end }}
+    {{- if $isPost }}
+    <meta property="article:published_time" content="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}">
+    <meta property="article:modified_time" content="{{ .Lastmod.Format "2006-01-02T15:04:05Z07:00" }}">
+    {{- end }}
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{{ $title }}">
+    <meta name="twitter:description" content="{{ $desc }}">
+    {{- with $image }}
+    <meta name="twitter:image" content="{{ .url }}">
+    {{- end }}
+    {{ partial "json-ld.html" (dict "page" . "title" $title "desc" $desc "image" $image "isPost" $isPost) }}

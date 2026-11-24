@@ -1,0 +1,66 @@
+{{ define "main" }}
+{{- $posts := where site.RegularPages "Section" "posts" }}
+<main class="gh-main gh-outer">
+    <div class="gh-inner">
+        <article class="gh-article post{{ if not .Params.feature_image }} no-image{{ end }}">
+            {{- if .Params.feature_image }}
+            <header class="gh-article-header gh-canvas">
+                <h1 class="gh-article-title">{{ .Title }}</h1>
+                {{- with .Params.excerpt }}
+                <p class="gh-article-excerpt">{{ . }}</p>
+                {{- end }}
+                {{ partial "feature-image.html" . }}
+            </header>
+            {{- end }}
+
+            <section class="gh-content gh-canvas" data-pagefind-body>
+                {{ .Content }}
+                {{- if not .Params.feature_image }}
+                <header class="gh-article-header">
+                    <h1 class="gh-article-title">{{ .Title }}</h1>
+                    {{- with .Params.excerpt }}
+                    <p class="gh-article-excerpt">{{ . }}</p>
+                    {{- end }}
+                </header>
+                {{- end }}
+                <aside class="gh-article-meta" data-pagefind-ignore>
+                    <div class="gh-article-meta-inner">
+                        <div class="gh-author-image-list instapaper_ignore">
+                            <a class="gh-author-image" href="{{ site.Params.author.url }}">
+                                {{- with resources.Get site.Params.author.image }}
+                                <img src="{{ .RelPermalink }}" alt="{{ site.Params.author.name }}" width="{{ .Width }}" height="{{ .Height }}">
+                                {{- end }}
+                            </a>
+                        </div>
+                        <div class="gh-article-meta-wrapper">
+                            <div class="gh-author-name-list">
+                                <a href="{{ site.Params.author.url }}">{{ site.Params.author.name }}</a>
+                            </div>
+                            <time class="gh-article-date" datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "02 Jan 2006" }}</time>
+                        </div>
+                    </div>
+                </aside>
+            </section>
+
+            <footer class="gh-article-footer gh-canvas">
+                <nav class="gh-navigation">
+                    {{- /* posts are sorted newest first: Next = older, Prev = newer */}}
+                    <div class="gh-navigation-previous">
+                        {{- with $posts.Next . }}
+                        <a class="gh-navigation-link" href="{{ .RelPermalink }}">← Previous</a>
+                        {{- end }}
+                    </div>
+
+                    <div class="gh-navigation-middle"></div>
+
+                    <div class="gh-navigation-next">
+                        {{- with $posts.Prev . }}
+                        <a class="gh-navigation-link" href="{{ .RelPermalink }}">Next →</a>
+                        {{- end }}
+                    </div>
+                </nav>
+            </footer>
+        </article>
+    </div>
+</main>
+{{ end }}

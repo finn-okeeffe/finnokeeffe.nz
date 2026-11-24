@@ -1,0 +1,13 @@
+{{- /* Ghost's reading time: 275 words a minute, plus 12 s for the first image,
+       11 s for the second, ... down to 3 s each from the tenth on. */ -}}
+{{- /* Ghost counts runs of letters/digits as words (so "18.774" is two). */ -}}
+{{- $text := replaceRE `<[^>]*>` " " .Content -}}
+{{- $words := len (findRE `[a-zA-ZÀ-ÿ0-9_\x{0392}-\x{03c9}\x{0410}-\x{04F9}]+` $text) -}}
+{{- $seconds := div (mul $words 60.0) 275 -}}
+{{- $images := len (findRE `<img\b` .Content) -}}
+{{- with .Params.feature_image }}{{ $images = add $images 1 }}{{ end -}}
+{{- range $i := seq $images -}}
+  {{- $seconds = add $seconds (math.Max 3 (sub 13 $i)) -}}
+{{- end -}}
+{{- $minutes := math.Max 1 (math.Round (div $seconds 60)) -}}
+{{- if eq $minutes 1.0 }}1 min read{{ else }}{{ $minutes }} min read{{ end -}}

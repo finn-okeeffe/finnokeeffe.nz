@@ -1,0 +1,7 @@
+{{- $main := resources.Get "js/main.js" | minify | fingerprint "sha384" }}
+<script src="{{ $main.RelPermalink }}" integrity="{{ $main.Data.Integrity }}" defer></script>
+{{- if .Store.Get "hasMermaid" }}
+{{- $init := resources.Get "js/mermaid-init.js" | minify | fingerprint "sha384" }}
+<script src="/vendor/mermaid-12.3.0/mermaid.min.js" defer></script>
+<script src="{{ $init.RelPermalink }}" integrity="{{ $init.Data.Integrity }}" defer></script>
+{{- end }}

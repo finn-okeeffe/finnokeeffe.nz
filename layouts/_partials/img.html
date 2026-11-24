@@ -1,0 +1,60 @@
+{{- /*
+Responsive <img>. Arguments (dict):
+  src      path under assets/ (e.g. /content/images/...), a page-bundle file name, or a URL
+  page     the page, to look up page-bundle images
+  alt      alt text
+  widths   srcset widths to generate (only those smaller than the image are used)
+  default  width for src (0 = original)
+  sizes    sizes attribute
+  class    optional class
+  eager    true for above-the-fold images
+Local images keep their original URL (Ghost's /content/images/... paths still work);
+resized copies are added to srcset. Unsplash URLs get srcset through their w= parameter.
+*/ -}}
+{{- $src := .src -}}
+{{- $u := urls.Parse $src -}}
+{{- $attrs := dict "alt" (.alt | default "") -}}
+{{- with .class }}{{ $attrs = merge $attrs (dict "class" .) }}{{ end -}}
+{{- $loading := cond (.eager | default false) "eager" "lazy" -}}
+{{- if $u.IsAbs -}}
+  {{- $attrs = merge $attrs (dict "src" $src) -}}
+  {{- if eq $u.Host "images.unsplash.com" -}}
+    {{- $set := slice -}}
+    {{- range .widths -}}
+      {{- $w := . -}}
+      {{- $url := cond (findRE `[?&]w=\d+` $src) (replaceRE `([?&])w=\d+` (printf "${1}w=%d" $w) $src) (printf "%s&w=%d" $src $w) -}}
+      {{- $set = $set | append (printf "%s %dw" $url $w) -}}
+    {{- end -}}
+    {{- $def := .default | default 0 -}}
+    {{- if $def }}{{ $attrs = merge $attrs (dict "src" (replaceRE `([?&])w=\d+` (printf "${1}w=%d" $def) $src)) }}{{ end -}}
+    {{- $attrs = merge $attrs (dict "srcset" (delimit $set ", ") "sizes" .sizes) -}}
+  {{- end -}}
+{{- else -}}
+  {{- $res := "" -}}
+  {{- with .page }}{{ with .Resources.Get $src }}{{ $res = . }}{{ end }}{{ end -}}
+  {{- if not $res }}{{ with resources.Get (strings.TrimPrefix "/" $u.Path) }}{{ $res = . }}{{ end }}{{ end -}}
+  {{- if not $res }}{{ errorf "img.html: image %q not found" $src }}{{ end -}}
+  {{- $attrs = merge $attrs (dict "src" $res.RelPermalink) -}}
+  {{- if in (slice "image/jpeg" "image/png" "image/webp") $res.MediaType.Type -}}
+    {{- $attrs = merge $attrs (dict "width" $res.Width "height" $res.Height) -}}
+    {{- $set := slice -}}
+    {{- $def := .default | default 0 -}}
+    {{- range .widths -}}
+      {{- if lt . $res.Width -}}
+        {{- $r := $res.Resize (printf "%dx" .) -}}
+        {{- $set = $set | append (printf "%s %dw" $r.RelPermalink .) -}}
+        {{- if eq . $def }}{{ $attrs = merge $attrs (dict "src" $r.RelPermalink) }}{{ end -}}
+      {{- end -}}
+    {{- end -}}
+    {{- if $set -}}
+      {{- $set = $set | append (printf "%s %dw" $res.RelPermalink $res.Width) -}}
+      {{- $attrs = merge $attrs (dict "srcset" (delimit $set ", ") "sizes" .sizes) -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+<img src="{{ $attrs.src }}"
+  {{- with $attrs.srcset }} srcset="{{ . }}"{{ end }}
+  {{- with $attrs.sizes }} sizes="{{ . }}"{{ end }}
+  {{- with $attrs.class }} class="{{ . }}"{{ end }} alt="{{ $attrs.alt }}"
+  {{- with $attrs.width }} width="{{ . }}" height="{{ $attrs.height }}"{{ end }} loading="{{ $loading }}"
+  {{- if .eager }} fetchpriority="high"{{ end }}>

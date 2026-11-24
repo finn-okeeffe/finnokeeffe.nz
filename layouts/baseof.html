@@ -1,0 +1,20 @@
+{{- /* Render the content first so render hooks can flag math and diagrams for the head. */ -}}
+{{- if .IsPage }}{{ $noop := .Content }}{{ end -}}
+<!DOCTYPE html>
+<html lang="{{ site.Language.Locale }}" class="{{ partial "text-contrast.html" . }}">
+<head>
+    {{- partial "head.html" . }}
+</head>
+<body class="{{ partial "body-class.html" . }}">
+<div class="gh-site">
+    {{ partial "header.html" . }}
+
+    {{ block "main" . }}{{ end }}
+
+    {{ partial "footer.html" . }}
+</div>
+
+{{ partial "search.html" . }}
+{{ partial "scripts.html" . }}
+</body>
+</html>

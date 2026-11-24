@@ -1,0 +1,21 @@
+{{- $p := .page -}}
+<article class="gh-card post{{ if not $p.Params.feature_image }} no-image{{ end }}">
+    <a class="gh-card-link" href="{{ $p.RelPermalink }}">
+        <figure class="gh-card-image">
+            {{- with $p.Params.feature_image }}
+            {{ partial "img.html" (dict
+                "src" . "page" $p "alt" (or $p.Params.feature_image_alt $p.Title)
+                "widths" (slice 300 720 960 1200 2000) "default" 720
+                "sizes" "(max-width: 1200px) 100vw, 1200px"
+                "eager" $.eager) }}
+            {{- end }}
+        </figure>
+        <div class="gh-card-wrapper">
+            <h2 class="gh-card-title">{{ $p.Title }}</h2>
+            <footer class="gh-card-meta">
+                <time class="gh-card-date" datetime="{{ $p.Date.Format "2006-01-02" }}">{{ $p.Date.Format "02 Jan 2006" }}</time>
+                <span class="gh-card-length">{{ partial "reading-time.html" $p }}</span>
+            </footer>
+        </div>
+    </a>
+</article>

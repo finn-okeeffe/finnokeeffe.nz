@@ -1,0 +1,15 @@
+    <footer class="gh-foot gh-outer">
+        <div class="gh-foot-inner gh-inner">
+            <nav class="gh-foot-menu">
+                <ul class="nav">
+                {{- range site.Menus.footer }}
+                    <li class="nav-{{ .Name | urlize }}"><a href="{{ .URL }}">{{ .Name }}</a></li>
+                {{- end }}
+                </ul>
+            </nav>
+
+            <div class="gh-copyright">
+                {{ site.Title }} © {{ now.Year }}.
+            </div>
+        </div>
+    </footer>

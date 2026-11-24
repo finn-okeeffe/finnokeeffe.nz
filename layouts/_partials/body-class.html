@@ -1,0 +1,18 @@
+{{- /* Body classes the Solo CSS expects (Ghost's body_class plus the theme settings). */ -}}
+{{- $c := slice -}}
+{{- if .IsHome -}}
+  {{- $c = $c | append "home-template" -}}
+{{- else if eq .Kind "404" -}}
+  {{- $c = $c | append "error-template" -}}
+{{- else if eq .Section "posts" -}}
+  {{- $c = $c | append "post-template" -}}
+{{- else -}}
+  {{- $c = $c | append "page-template" (printf "page-%s" .Slug) -}}
+{{- end -}}
+{{- with site.Params.headingFont }}{{ $c = $c | append (printf "gh-font-heading-%s" (urlize (lower .))) }}{{ end -}}
+{{- if .IsHome }}{{ $c = $c | append "is-head-transparent" "has-background-about" }}{{ end -}}
+{{- /* is-dropdown-loaded: Ghost's script added it once it had checked the nav fits;
+       with three items it always does, and the CSS hides the nav until it's set. */ -}}
+{{- $c = $c | append "is-head-middle-logo" "has-classic-feed" "is-dropdown-loaded" -}}
+{{- if and .Params.hero .Params.feature_image }}{{ $c = $c | append "has-hero-page" }}{{ end -}}
+{{- delimit $c " " -}}

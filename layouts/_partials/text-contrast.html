@@ -1,0 +1,8 @@
+{{- /* Solo picks light or dark text from the background colour (YIQ contrast).
+       Ghost did this in an inline script; here it's decided at build time. */ -}}
+{{- $hex := strings.TrimPrefix "#" site.Params.backgroundColor -}}
+{{- $r := int (printf "0x%s" (substr $hex 0 2)) -}}
+{{- $g := int (printf "0x%s" (substr $hex 2 2)) -}}
+{{- $b := int (printf "0x%s" (substr $hex 4 2)) -}}
+{{- $yiq := div (add (add (mul $r 299) (mul $g 587)) (mul $b 114)) 1000.0 -}}
+{{- if ge $yiq 128 }}has-dark-text{{ else }}has-light-text{{ end -}}

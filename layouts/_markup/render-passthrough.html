@@ -1,0 +1,11 @@
+{{- /* Math between \( \), \[ \] or $$ $$, rendered to HTML by KaTeX at build time.
+       A LaTeX error fails the build and names the file and line. */ -}}
+{{- $opts := dict "output" "htmlAndMathml" "displayMode" (eq .Type "block") -}}
+{{- with try (transform.ToMath .Inner $opts) -}}
+  {{- with .Err -}}
+    {{- errorf "KaTeX could not render %q: %s (%s)" $.Inner . $.Position -}}
+  {{- else -}}
+    {{- .Value -}}
+    {{- $.Page.Store.Set "hasMath" true -}}
+  {{- end -}}
+{{- end -}}

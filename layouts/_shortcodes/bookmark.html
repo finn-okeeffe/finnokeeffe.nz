@@ -1,0 +1,22 @@
+{{- /* Ghost bookmark card (link preview). Images are local files under assets/
+       (e.g. /content/images/...) or page-bundle files; they are not fetched from the web.
+       {{< bookmark url="" title="" description="" icon="" author="" publisher="" thumbnail="" >}} */ -}}
+{{- $page := .Page -}}
+{{- $local := dict -}}
+{{- range $key := slice "icon" "thumbnail" -}}
+  {{- with $.Get $key -}}
+    {{- $res := or ($page.Resources.Get .) (resources.Get (strings.TrimPrefix "/" .)) -}}
+    {{- if not $res }}{{ errorf "bookmark: %s %q not found in %s" $key . $page.File.Path }}{{ end -}}
+    {{- $local = merge $local (dict $key $res.RelPermalink) -}}
+  {{- end -}}
+{{- end -}}
+<figure class="kg-card kg-bookmark-card"><a class="kg-bookmark-container" href="{{ .Get "url" }}"><div class="kg-bookmark-content"><div class="kg-bookmark-title">{{ .Get "title" }}</div>
+{{- with .Get "description" }}<div class="kg-bookmark-description">{{ . }}</div>{{ end -}}
+<div class="kg-bookmark-metadata">
+{{- with $local.icon }}<img class="kg-bookmark-icon" src="{{ . }}" alt="">{{ end -}}
+{{- /* Ghost shows the publisher in the "author" slot and vice versa. */ -}}
+{{- with .Get "publisher" }}<span class="kg-bookmark-author">{{ . }}</span>{{ end -}}
+{{- with .Get "author" }}<span class="kg-bookmark-publisher">{{ . }}</span>{{ end -}}
+</div></div>
+{{- with $local.thumbnail }}<div class="kg-bookmark-thumbnail"><img src="{{ . }}" alt="" loading="lazy"></div>{{ end -}}
+</a></figure>

@@ -1,0 +1,26 @@
+{{- /* One stylesheet, in the same order Ghost loaded them: theme, then card styles, then ours. */ -}}
+{{- $vars := resources.Get "css/theme-vars.css" | resources.ExecuteAsTemplate "css/theme-vars.css" . -}}
+{{- $files := slice
+    (resources.Get "css/fonts.css")
+    $vars
+    (resources.Get "css/ghost-shared/vars.css")
+    (resources.Get "css/ghost-shared/reset.css")
+    (resources.Get "css/ghost-shared/global.css")
+    (resources.Get "css/ghost-shared/layout.css")
+    (resources.Get "css/ghost-shared/header.css")
+    (resources.Get "css/ghost-shared/cover.css")
+    (resources.Get "css/ghost-shared/loop.css")
+    (resources.Get "css/ghost-shared/post-card.css")
+    (resources.Get "css/ghost-shared/article.css")
+    (resources.Get "css/ghost-shared/content.css")
+    (resources.Get "css/ghost-shared/card.css")
+    (resources.Get "css/ghost-shared/pagination.css")
+    (resources.Get "css/ghost-shared/navigation.css")
+    (resources.Get "css/ghost-shared/button.css")
+    (resources.Get "css/ghost-shared/footer.css")
+    (resources.Get "css/solo.css")
+    (resources.Get "css/ghost-cards.min.css")
+    (resources.Get "css/site.css")
+-}}
+{{- $css := resources.Concat "css/screen.css" $files | minify | fingerprint "sha384" -}}
+{{- return $css -}}

@@ -1,0 +1,5 @@
+{{- /* ```mermaid code blocks become diagrams; the page then loads Mermaid. */ -}}
+{{- .Page.Store.Set "hasMermaid" true -}}
+<div class="mermaid">
+{{ .Inner | htmlEscape | safeHTML }}
+</div>

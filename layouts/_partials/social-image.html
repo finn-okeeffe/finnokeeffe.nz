@@ -1,0 +1,15 @@
+{{- /* Image for og:image / twitter:image: the feature image, else the site cover.
+       Returns a dict with url, width and height (width/height only for local images). */ -}}
+{{- $src := or .Params.feature_image site.Params.cover -}}
+{{- $out := dict -}}
+{{- $u := urls.Parse $src -}}
+{{- if $u.IsAbs -}}
+  {{- $out = dict "url" $src -}}
+{{- else -}}
+  {{- with or (.Resources.Get $src) (resources.Get (strings.TrimPrefix "/" $src)) -}}
+    {{- $img := . -}}
+    {{- if gt .Width 1200 }}{{ $img = .Resize "1200x" }}{{ end -}}
+    {{- $out = dict "url" $img.Permalink "width" $img.Width "height" $img.Height -}}
+  {{- end -}}
+{{- end -}}
+{{- return $out -}}

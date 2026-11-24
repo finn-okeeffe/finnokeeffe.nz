@@ -1,0 +1,28 @@
+# Cloudflare Pages redirects. https://developers.cloudflare.com/pages/configuration/redirects/
+# First match wins.
+
+# Feed: Ghost served it at /rss/; Hugo writes /rss/index.xml.
+/rss                 /rss/              301
+/rss/                /rss/index.xml     200
+/author/finn/rss/    /rss/              301
+/author/*            /                  301
+/page/1/             /                  301
+
+# Ghost's sitemap index and sub-sitemaps
+/sitemap-posts.xml    /sitemap.xml  301
+/sitemap-pages.xml    /sitemap.xml  301
+/sitemap-authors.xml  /sitemap.xml  301
+/sitemap-tags.xml     /sitemap.xml  301
+
+# Ghost's resized images (/content/images/size/w600/...) -> the full image
+/content/images/size/:size/format/:format/*  /content/images/:splat  301
+/content/images/size/:size/*                 /content/images/:splat  301
+
+# Ghost saved bookmark thumbnails without a file extension.
+/content/images/thumbnail/the_doctors_kitchen_project      /content/images/thumbnail/the_doctors_kitchen_project.png      301
+/content/images/thumbnail/instrumental-variables-notebook  /content/images/thumbnail/instrumental-variables-notebook.png  301
+
+# The Streamlit dashboard moved to its own subdomain (still served from watson via NPM).
+/streamlit/the-doctors-kitchen-dashboard    https://kitchen.finnokeeffe.nz/streamlit/the-doctors-kitchen-dashboard/         301
+/streamlit/the-doctors-kitchen-dashboard/*  https://kitchen.finnokeeffe.nz/streamlit/the-doctors-kitchen-dashboard/:splat  301
+

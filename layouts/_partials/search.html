@@ -1,0 +1,11 @@
+{{- /* Search (Pagefind). The index is built after Hugo by `pagefind --site public`,
+       so search only works on a full build (`npm run build`), not under `hugo server`. */ -}}
+<dialog class="search-dialog" id="search-dialog" aria-label="Search this site">
+    <div class="search-dialog-inner">
+        <div class="search-dialog-head">
+            <span class="search-dialog-title">Search</span>
+            <button class="search-dialog-close gh-icon-btn" type="button" aria-label="Close search" data-search-close>✕</button>
+        </div>
+        <div id="search" data-pagefind-ui></div>
+    </div>
+</dialog>
