@@ -74,6 +74,8 @@ node scripts/check-links.mjs public   # broken internal links/images/anchors
 - **Free-plan limits**: 500 builds a month, 20,000 files and 25 MiB per file. This site is about 120 files.
 - **Headers and redirects**: `static/_headers` (security headers, caching, `noindex` on `*.pages.dev`) and `static/_redirects`.
 - **CI**: `.github/workflows/check.yml` builds the site and runs the link check on every push and pull request. It doesn't deploy.
+- **Known console error**: on `www`, Cloudflare's JavaScript Detections (bot management) inject an inline script into every page. The CSP blocks it, so the browser console shows one CSP error per page. It's harmless (it doesn't affect visitors or the site) and can't be allowlisted, because the script changes on every request. Leave the CSP as it is.
+- **Stale edge cache**: Cloudflare caches images for a long time. After replacing an image at the same URL, purge it (Caching → Configuration → Purge Cache).
 
 ### URLs kept from Ghost
 
