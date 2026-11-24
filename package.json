@@ -1,0 +1,16 @@
+{
+  "name": "finnokeeffe-nz-site",
+  "private": true,
+  "description": "Static site for www.finnokeeffe.nz (Hugo + Pagefind, hosted on Cloudflare Pages).",
+  "license": "SEE LICENSE IN LICENSE",
+  "scripts": {
+    "build": "hugo --gc --minify && pagefind --site public",
+    "dev": "hugo server --buildDrafts"
+  },
+  "devDependencies": {
+    "pagefind": "1.6.0"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}

@@ -1,0 +1,12 @@
+# Build output
+/public/
+/resources/_gen/
+.hugo_build.lock
+node_modules/
+
+# Never commit Ghost exports or database dumps: they contain account data.
+*.ghost.*.json
+*.sql
+*.sql.gz
+
+.DS_Store
